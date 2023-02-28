@@ -9,7 +9,6 @@ struct Book
     string name;
     int price;
     int type;
-    int quantity;
 };
 
 struct Node
@@ -24,16 +23,16 @@ struct LIST
     Node *tail;
 };
 
-struct Customer
+struct Invoice
 {
     string customerName;
-    int bill;
+    int totalAmount;
     int quantity;
 };
 
 struct DNode
 {
-    Customer info;
+    Invoice info;
     DNode *next;
     DNode *prev;
 };
@@ -63,6 +62,18 @@ void addBook(LIST &lst, Book book)
         lst.tail = p;
     }
 }
+void addBook(LIST lst)
+{
+    Book book;
+    cout << "Enter clothing item :" << endl;
+    cout << "Name: ";
+    cin >> book.name;
+    cout << "Type: ";
+    cin >> book.type;
+    cout << "Price: ";
+    cin >> book.price;
+    addBook(lst, book);
+}
 /**
  * @brief Update Book
  *
@@ -72,8 +83,19 @@ void addBook(LIST &lst, Book book)
  * @return true
  * @return false
  */
-bool updateBook(LIST &lst, string name, Book newBook)
+bool updateBook(LIST &lst)
 {
+    Book newBook;
+    string name;
+    cout << "Enter name of book:" << endl;
+    cin >> name;
+    cout << "Enter book item :" << endl;
+    cout << "Name: ";
+    cin >> newBook.name;
+    cout << "Type: ";
+    cin >> newBook.type;
+    cout << "Price: ";
+    cin >> newBook.price;
     Node *p = lst.head;
     while (p != NULL)
     {
@@ -94,10 +116,14 @@ bool updateBook(LIST &lst, string name, Book newBook)
  * @return true
  * @return false
  */
-bool removeBook(LIST &lst, string name)
+bool removeBook(LIST &lst)
 {
+    string name;
+    cout << "Enter name of book:" << endl;
+    cin >> name;
     if (lst.head == NULL)
     {
+        cout << "Empty book:" << endl;
         return false;
     }
 
@@ -106,6 +132,7 @@ bool removeBook(LIST &lst, string name)
         Node *p = lst.head;
         lst.head = lst.head->next;
         delete p;
+        cout << "delete book successful" << endl;
         return true;
     }
 
@@ -121,11 +148,13 @@ bool removeBook(LIST &lst, string name)
                 lst.tail = prev;
             }
             delete p;
+            cout << "delete book successful" << endl;
             return true;
         }
         prev = p;
         p = p->next;
     }
+    cout << "delete book fail" << endl;
     return false;
 }
 /**
@@ -134,15 +163,19 @@ bool removeBook(LIST &lst, string name)
  * @param list
  * @param name
  */
-void searchByName(LIST &list, string name)
+void searchByName(LIST &list)
 {
+    string name;
+    cout << "Search by name: ";
+    cin >> name;
+
     Node *p = list.head;
     bool found = false;
     while (p != NULL)
     {
         if (p->info.name == name)
         {
-            cout << "Found: " << p->info.name << ", " << p->info.quantity << ", " << p->info.price << endl;
+            cout << "Found: " << p->info.name << ", " << p->info.type << ", " << p->info.price << endl;
             found = true;
         }
         p = p->next;
@@ -158,15 +191,19 @@ void searchByName(LIST &list, string name)
  * @param list
  * @param price
  */
-void searchByPrice(LIST &list, int price)
+void searchByPrice(LIST &list)
 {
+    int price;
+    cout << "Search by price of book: ";
+    cin >> price;
+
     Node *p = list.head;
     bool found = false;
     while (p != NULL)
     {
         if (p->info.price == price)
         {
-            cout << "Found: " << p->info.name << ", " << p->info.quantity << ", " << p->info.price << endl;
+            cout << "Found: " << p->info.name << ", " << p->info.type << ", " << p->info.price << endl;
             found = true;
         }
         p = p->next;
@@ -185,7 +222,6 @@ void sortBookByName(LIST &lst)
 {
     Node *i, *j, *prev_j;
     Book key;
-
     if (lst.head == nullptr || lst.head->next == nullptr)
     {
         return;
@@ -197,6 +233,7 @@ void sortBookByName(LIST &lst)
         key = i->info;
         j = lst.head;
         prev_j = nullptr;
+
         while (j != i && key.name > j->info.name)
         {
             prev_j = j;
@@ -224,6 +261,7 @@ void sortBookByName(LIST &lst)
     }
     lst.tail = p;
 }
+
 /**
  * @brief Sort By Price of Book
  *
@@ -245,7 +283,6 @@ void sortBookByPrice(LIST &lst)
         key = i->info;
         j = lst.head;
         prev_j = nullptr;
-
         while (j != i && key.price > j->info.price)
         {
             prev_j = j;
@@ -266,6 +303,7 @@ void sortBookByPrice(LIST &lst)
         }
         i = i->next;
     }
+
     Node *p = lst.head;
     while (p->next != nullptr)
     {
@@ -273,6 +311,7 @@ void sortBookByPrice(LIST &lst)
     }
     lst.tail = p;
 }
+
 /**
  * @brief Sort List By Name of Book
  *
@@ -286,16 +325,15 @@ void sortListByName(DLIST &list)
     }
 
     DNode *curr = list.head->next;
+
     while (curr != nullptr)
     {
         DNode *temp = curr;
         string name = curr->info.customerName;
-
         while (temp->prev != nullptr && temp->prev->info.customerName > name)
         {
             temp = temp->prev;
         }
-
         if (temp->prev == nullptr && temp->info.customerName > name)
         {
             curr->prev->next = curr->next;
@@ -342,14 +380,12 @@ void sortListByTotalAmount(DLIST &list)
     {
         return;
     }
-
     DNode *curr = list.head->next;
     while (curr != nullptr)
     {
-        Customer tmp = curr->info;
+        Invoice tmp = curr->info;
         DNode *prev = curr->prev;
-
-        while (prev != nullptr && prev->info.bill > tmp.quantity)
+        while (prev != nullptr && prev->info.totalAmount > tmp.totalAmount)
         {
             prev->next->info = prev->info;
             prev = prev->prev;
@@ -362,9 +398,12 @@ void sortListByTotalAmount(DLIST &list)
         {
             prev->next->info = tmp;
         }
-
         curr = curr->next;
     }
+}
+void displayBook(Book p)
+{
+    cout << "Name: " << p.name << ", Type: " << p.type << ", Price: " << p.price << endl;
 }
 /**
  * @brief Find Max by Price
@@ -372,54 +411,59 @@ void sortListByTotalAmount(DLIST &list)
  * @param list
  * @return Books
  */
-Book findMaxByPrice(LIST list)
+// Tìm phần tử lớn nhất trong danh sách liên kết đơn
+void findMaxByPrice(LIST list)
 {
+    // Trường hợp danh sách rỗng
     if (list.head == nullptr)
     {
-        return Book{"", 0, 0, 0};
+        displayBook(Book{"", 0, 0});
     }
-
-    Node *curr = list.head;
-    Book maxBook = curr->info;
-    while (curr != nullptr)
+    else
     {
-        if (curr->info.price > maxBook.price)
+        // Duyệt danh sách liên kết đơn từ đầu đến cuối để tìm phần tử lớn nhất
+        Node *curr = list.head;
+        Book maxBook = curr->info;
+        while (curr != nullptr)
         {
-            maxBook = curr->info;
+            if (curr->info.price > maxBook.price)
+            {
+                maxBook = curr->info;
+            }
+            curr = curr->next;
         }
-        curr = curr->next;
+        displayBook(maxBook);
     }
+}
 
-    return maxBook;
+// Tìm phần tử nhỏ nhất trong danh sách liên kết đơn
+void findMinByPrice(LIST list)
+{
+    // Trường hợp danh sách rỗng
+    if (list.head == nullptr)
+    {
+        displayBook(Book{"", 0, 0});
+    }
+    else
+    {
+        // Duyệt danh sách liên kết đơn từ đầu đến cuối để tìm phần tử nhỏ nhất
+        Node *curr = list.head;
+        Book minBook = curr->info;
+        while (curr != nullptr)
+        {
+            if (curr->info.price < minBook.price)
+            {
+                minBook = curr->info;
+            }
+            curr = curr->next;
+        }
+        displayBook(minBook);
+    }
 }
 /**
- * @brief Find Min By Price
- *
- * @param list
- * @return Book
- */
-Book findMinByPrice(LIST list)
-{
-    if (list.head == nullptr)
-    {
-        return Book{"", 0, 0, 0};
-    }
-
-    Node *curr = list.head;
-    Book minBook = curr->info;
-    while (curr != nullptr)
-    {
-        if (curr->info.price < minBook.price)
-        {
-            minBook = curr->info;
-        }
-        curr = curr->next;
-    }
-
-    return minBook;
-}
-// Hàm tính tổng giá trị của các sản phẩm
-int sum(LIST list)
+ * Calculate Sum
+ * */
+void sum(LIST list)
 {
     int sum = 0;
     Node *p = list.head;
@@ -428,29 +472,34 @@ int sum(LIST list)
         sum += p->info.price;
         p = p->next;
     }
-    return sum;
+    cout << "Tong tien mat hang 'SACH' : " << sum << " VND";
 }
+/**
+ * Calculate average
+ * */
 
-// Hàm tính trung bình giá trị của các sản phẩm
-float average(LIST list)
+void average(LIST list)
 {
     if (list.head == NULL)
     {
-        return 0;
+        cout << "Tong tien trung bình mat hang 'SACH' : " << 0 << " VND";
     }
-    int sum = 0, count = 0;
-    Node *p = list.head;
-    while (p != NULL)
+    else
     {
-        sum += p->info.price;
-        count++;
-        p = p->next;
+        int sum = 0, count = 0;
+        Node *p = list.head;
+        while (p != NULL)
+        {
+            sum += p->info.price;
+            count++;
+            p = p->next;
+        }
+        cout << "Tong tien trung bình mat hang 'SACH' : " << (float)sum / count << " VND";
     }
-    return (float)sum / count;
 }
 
 // Hàm đếm số lượng sản phẩm trong danh sách
-int count(LIST list)
+void count(LIST list)
 {
     int count = 0;
     Node *p = list.head;
@@ -459,28 +508,37 @@ int count(LIST list)
         count++;
         p = p->next;
     }
-    return count;
+    cout << "So luong 'SACH' co trong he thong : " << count << " chiec";
 }
 
 // Hàm tính tổng giá trị của các sản phẩm có kích cỡ nhỏ hơn một giá trị cho trước
-int sumBySize(LIST list, int sizeLimit)
+void sumByType(LIST list)
 {
+    int typeLimit;
+    cout << "typeLimit : ";
+    cin >> typeLimit;
+
     int sum = 0;
     Node *p = list.head;
     while (p != NULL)
     {
-        if (p->info.type < sizeLimit)
+        if (p->info.type < typeLimit)
         {
             sum += p->info.price;
         }
         p = p->next;
     }
-    return sum;
+
+    cout << "Tong tien 'BOOK' cac type sap xep nho hon  " << typeLimit << " = " << sum << " VND";
 }
 
 // Hàm tính số lượng sản phẩm có giá trị lớn hơn một giá trị cho trước
-int countByPrice(LIST list, int priceLimit)
+void countByPrice(LIST list)
 {
+    int priceLimit;
+    cout << "Size limit : ";
+    cin >> priceLimit;
+
     int count = 0;
     Node *p = list.head;
     while (p != NULL)
@@ -491,32 +549,32 @@ int countByPrice(LIST list, int priceLimit)
         }
         p = p->next;
     }
-    return count;
+    cout << "So luong 'BOOK' co gia lon hon  " << priceLimit << " = " << count << " chiec.";
 }
 
-void displayClothing(LIST lst)
+void displayBook(LIST lst)
 {
-    cout << "List of clothing: " << endl;
+    cout << "List of book: " << endl;
     Node *p = lst.head;
     while (p != NULL)
     {
-        cout << "Name: " << p->info.name << ", Size: " << p->info.type << ", Price: " << p->info.price << endl;
+        cout << "Name: " << p->info.name << ", Type: " << p->info.type << ", Price: " << p->info.price << endl;
         p = p->next;
     }
 }
 
-void inputClothingList(LIST &lst)
+void inputBookList(LIST &lst)
 {
     int n;
-    cout << "Enter the number of clothing items: ";
+    cout << "Enter the number of book items: ";
     cin >> n;
     for (int i = 0; i < n; i++)
     {
         Book book;
-        cout << "Enter clothing item #" << i + 1 << ":" << endl;
+        cout << "Enter book item #" << i + 1 << ":" << endl;
         cout << "Name: ";
         cin >> book.name;
-        cout << "Type: ";
+        cout << "Size: ";
         cin >> book.type;
         cout << "Price: ";
         cin >> book.price;
@@ -524,22 +582,7 @@ void inputClothingList(LIST &lst)
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////// Hóa đơn
-/**
- *
- *
- *
- *
- *
- * //////////////////////////////////////////////////////////////////////////////////////////////////
- *
- *
- *
- *
- * /////////////////////////////////////////////////////////////////////////////////////////////
- * */
-
-void addInvoice(DLIST &dlst, Customer inv)
+void addInvoice(DLIST &dlst, Invoice inv)
 {
     DNode *p = new DNode;
     p->info = inv;
@@ -556,9 +599,41 @@ void addInvoice(DLIST &dlst, Customer inv)
     }
 }
 
-// Hàm cập nhật thông tin của một đối tượng Hóa đơn trong danh sách
-bool updateInvoice(DLIST &lst, string customerName, Customer newIn)
+void addInvoice(DLIST &dlst)
 {
+    Invoice inv;
+    cout << "Enter invoice " << endl;
+    cout << "Customer name: ";
+    cin >> inv.customerName;
+    cout << "Quantity: ";
+    cin >> inv.quantity;
+    cout << "TotalAmount: ";
+    cin >> inv.totalAmount;
+    addInvoice(dlst, inv);
+}
+
+void displayInvoice(Invoice p)
+{
+    cout << "Customer name: " << p.customerName << ", Total amount: " << p.totalAmount << ", Quantity: "
+         << p.totalAmount << endl;
+}
+
+bool updateInvoice(DLIST &lst)
+{
+    string customerName;
+    Invoice newIn;
+
+    cout << "Customer name: ";
+    cin >> newIn.customerName;
+
+    cout << "Enter invoice " << endl;
+    cout << "New customer name: ";
+    cin >> newIn.customerName;
+    cout << "Quantity: ";
+    cin >> newIn.quantity;
+    cout << "TotalAmount: ";
+    cin >> newIn.totalAmount;
+
     DNode *p = lst.head;
     while (p != NULL)
     {
@@ -572,9 +647,12 @@ bool updateInvoice(DLIST &lst, string customerName, Customer newIn)
     return false;
 }
 
-// Hàm xóa một đối tượng Hóa đơn trong danh sách
-bool removeInvoice(DLIST &lst, string customerName)
+bool removeInvoice(DLIST &lst)
 {
+    string customerName;
+    cout << "Customer name: ";
+    cin >> customerName;
+
     DNode *p = lst.head;
     while (p != NULL)
     {
@@ -607,132 +685,133 @@ bool removeInvoice(DLIST &lst, string customerName)
     return false;
 }
 
-DNode *searchInvoice(DLIST DQ, char *customer_name)
+void *searchInvoiceByName(DLIST DQ)
 {
+    string customerName;
+    cout << "Search by customer name: ";
+    cin >> customerName;
+
     DNode *p;
     p = DQ.head;
     while (p != NULL)
     {
-        if (p->info.customerName == customer_name)
-            break;
+        if (p->info.customerName == customerName)
+        {
+            cout << "Found: " << p->info.customerName << ", " << p->info.quantity << ", " << p->info.totalAmount
+                 << endl;
+        }
         p = p->next;
     }
-    return p;
 }
 
-Customer findMaxByTotalAmount(DLIST list)
+void findMaxByTotalAmount(DLIST list)
 {
     // Trường hợp danh sách rỗng
     if (list.head == nullptr)
     {
-        return Customer{"", 0, 0};
+        displayInvoice(Invoice{"", 0, 0});
     }
-
-    // Duyệt danh sách liên kết kép từ đầu đến cuối để tìm phần tử lớn nhất
-    DNode *curr = list.head;
-    Customer maxInvoice = curr->info;
-    while (curr != nullptr)
+    else
     {
-        if (curr->info.bill > maxInvoice.bill)
+        DNode *curr = list.head;
+        Invoice maxInvoice = curr->info;
+        while (curr != nullptr)
         {
-            maxInvoice = curr->info;
+            if (curr->info.totalAmount > maxInvoice.totalAmount)
+            {
+                maxInvoice = curr->info;
+            }
+            curr = curr->next;
         }
-        curr = curr->next;
+        displayInvoice(maxInvoice);
     }
-
-    return maxInvoice;
 }
 
-Customer findMinTotalAmount(DLIST list)
+Invoice findMinTotalAmount(DLIST list)
 {
-    // Trường hợp danh sách rỗng
     if (list.head == nullptr)
     {
-        return Customer{"", 0, 0};
+        displayInvoice(Invoice{"", 0, 0});
     }
-
-    // Duyệt danh sách liên kết kép từ đầu đến cuối để tìm phần tử nhỏ nhất
-    DNode *curr = list.head;
-    Customer minInvoice = curr->info;
-    while (curr != nullptr)
+    else
     {
-        if (curr->info.bill < minInvoice.bill)
+        DNode *curr = list.head;
+        Invoice minInvoice = curr->info;
+        while (curr != nullptr)
         {
-            minInvoice = curr->info;
+            if (curr->info.totalAmount < minInvoice.totalAmount)
+            {
+                minInvoice = curr->info;
+            }
+            curr = curr->next;
         }
-        curr = curr->next;
+        displayInvoice(minInvoice);
     }
-
-    return minInvoice;
 }
 
-// Tính tổng của trường totalAmount của các Invoice trong danh sách liên kết kép
-int getTotal(DLIST list)
+void getTotal(DLIST list)
+{
+    if (list.head == nullptr)
+    {
+        cout << "Tong tien 'HOA DON' : " << 0 << " VND";
+    }
+    else
+    {
+        DNode *curr = list.head;
+        int total = 0;
+        while (curr != nullptr)
+        {
+            total += curr->info.totalAmount;
+            curr = curr->next;
+        }
+        cout << "Tong tien 'HOA DON' : " << total << " VND";
+    }
+}
+
+void getAverage(DLIST list)
 {
     // Trường hợp danh sách rỗng
     if (list.head == nullptr)
     {
-        return 0;
+        cout << "Tong tien trung binh 'HOA DON'" << 0 << " VND";
     }
-
-    // Duyệt danh sách liên kết kép từ đầu đến cuối để tính tổng
-    DNode *curr = list.head;
-    int total = 0;
-    while (curr != nullptr)
+    else
     {
-        total += curr->info.bill;
-        curr = curr->next;
-    }
+        // Tính tổng và đếm số lượng phần tử trong danh sách liên kết kép
+        int total = 0;
+        int count = 0;
+        DNode *curr = list.head;
+        while (curr != nullptr)
+        {
+            total += curr->info.totalAmount;
+            count++;
+            curr = curr->next;
+        }
 
-    return total;
+        cout << "Tong tien trung binh 'HOA DON'" << (float)total / count << " VND";
+    }
 }
 
-// Tính trung bình của trường totalAmount của các Invoice trong danh sách liên kết kép
-float getAverage(DLIST list)
-{
-    // Trường hợp danh sách rỗng
-    if (list.head == nullptr)
-    {
-        return 0;
-    }
-
-    // Tính tổng và đếm số lượng phần tử trong danh sách liên kết kép
-    int total = 0;
-    int count = 0;
-    DNode *curr = list.head;
-    while (curr != nullptr)
-    {
-        total += curr->info.bill;
-        count++;
-        curr = curr->next;
-    }
-
-    // Tính trung bình và trả về kết quả
-    return (float)total / count;
-}
-
-// Đếm số lượng phần tử trong danh sách liên kết kép
 int getCount(DLIST list)
 {
-    // Trường hợp danh sách rỗng
     if (list.head == nullptr)
     {
+        cout << "So luong 'HOA DON' : " << 0;
         return 0;
     }
-
-    // Duyệt danh sách liên kết kép từ đầu đến cuối để đếm số lượng phần tử
-    int count = 0;
-    DNode *curr = list.head;
-    while (curr != nullptr)
+    else
     {
-        count++;
-        curr = curr->next;
+        int count = 0;
+        DNode *curr = list.head;
+        while (curr != nullptr)
+        {
+            count++;
+            curr = curr->next;
+        }
+        cout << "So luong 'HOA DON' : " << count;
     }
-
-    return count;
 }
 
-// Thống kê những hóa đơn có totalAmount lớn hơn 50000
 void findLargeInvoices(DLIST list)
 {
     DNode *p = list.head;
@@ -740,10 +819,10 @@ void findLargeInvoices(DLIST list)
     cout << "Cac hoa don co gia tri lon hon 50000:" << endl;
     while (p != NULL)
     {
-        if (p->info.bill > 50000)
+        if (p->info.totalAmount > 50000)
         {
             found = true;
-            cout << "Hoa don cua khach hang " << p->info.customerName << " co gia tri " << p->info.bill << endl;
+            cout << "Hoa don cua khach hang " << p->info.customerName << " co gia tri " << p->info.totalAmount << endl;
         }
         p = p->next;
     }
@@ -752,12 +831,14 @@ void findLargeInvoices(DLIST list)
         cout << "Khong co hoa don nao co gia tri lon hon 50000." << endl;
     }
 }
-
-// Thống kê Khách hàng A mua bao nhiêu sản phẩm
-int countProductByCustomerName(DLIST *list, string customerName)
+void countProductByCustomerName(DLIST list)
 {
+    string customerName;
+    cout << "Nhap tien khach hang \n";
+    cin >> customerName;
+
     int count = 0;
-    DNode *p = list->head;
+    DNode *p = list.head;
     while (p != NULL)
     {
         if (p->info.customerName == customerName)
@@ -766,7 +847,7 @@ int countProductByCustomerName(DLIST *list, string customerName)
         }
         p = p->next;
     }
-    return count;
+    cout << "Khach hang " << customerName << "da mua " << count << " san pham.";
 }
 
 void displayInvoice(DLIST dlst)
@@ -775,8 +856,8 @@ void displayInvoice(DLIST dlst)
     DNode *p = dlst.head;
     while (p != NULL)
     {
-        cout << "Customer name: " << p->info.customerName << ", Total amount: " << p->info.quantity << ", Quantity: "
-             << p->info.bill << endl;
+        cout << "Customer name: " << p->info.customerName << ", Total amount: " << p->info.totalAmount << ", Quantity: "
+             << p->info.totalAmount << endl;
         p = p->next;
     }
 }
@@ -788,14 +869,14 @@ void inputInvoiceList(DLIST &lst)
     cin >> n;
     for (int i = 0; i < n; i++)
     {
-        Customer inv;
+        Invoice inv;
         cout << "Enter invoice #" << i + 1 << ":" << endl;
         cout << "Customer name: ";
         cin >> inv.customerName;
         cout << "Quantity: ";
         cin >> inv.quantity;
-        cout << "Bill: ";
-        cin >> inv.bill;
+        cout << "TotalAmount: ";
+        cin >> inv.totalAmount;
         addInvoice(lst, inv);
     }
 }
@@ -803,99 +884,275 @@ void inputInvoiceList(DLIST &lst)
 int main()
 {
     LIST bookList;
-    DLIST customerList;
+    DLIST invoiceList;
     bookList.head = NULL;
-    customerList.tail = NULL;
-    bookList.head = NULL;
-    customerList.tail = NULL;
+    bookList.tail = NULL;
+    invoiceList.head = NULL;
+    invoiceList.tail = NULL;
 
-    bool continue_program = true;
-    while (continue_program)
+    int choice, choice1, choice2, choice3, choice4, choice5, choice6, choice7;
+    do
     {
-        int choice = 0;
-        cout << "Menu chon chuong trinh: " << endl;
-        cout << "1. Lua chon so 1" << endl;
-        cout << "2. Lua chon so 2" << endl;
-        cout << "3. Lua chon so 3" << endl;
-        cout << "4. Lua chon so 4" << endl;
-        cout << "5. Lua chon so 5" << endl;
-        cout << "6. Lua chon so 6" << endl;
-        cout << "7. Lua chon so 7" << endl;
-        cout << "8. Lua chon so 8" << endl;
+        cout << "Menu:\n";
+        cout << "1. Nhap-In danh sach 'Sach' - 'Hoa don khach hang' .\n";
+        cout << "2. Thêm -  sửa - xóa hàng hóa.\n";
+        cout << "3. Tìm kiếm.\n";
+        cout << "4. Sắp xếp mặt hàng \n";
+        cout << "5. Tìm kiếm phần tử lớn nhất, nhỏ nhất. \n";
+        cout << "6. Tính tổng, trung bình và đếm mặt hàng . \n";
+        cout << "7.Thống kê. \n";
+        cout << "0. Thoat\n";
         cout << "Nhap lua chon cua ban: ";
         cin >> choice;
-
         switch (choice)
         {
         case 1:
-            cout << "Ban da chon lua chon so 1" << endl;
-            bool continue_choice1 = true;
-            while (continue_choice1)
+            do
             {
-                int sub_choice = 0;
-                cout << "1.1. Lua chon chuc nang A" << endl;
-                cout << "1.2. Lua chon chuc nang B" << endl;
-                cout << "1.3. Quay lai menu chinh" << endl;
+                cout << "MENU CHUC NANG 1:\n";
+                cout << "1.1 Nhap danh sach 'SACH'\n";
+                cout << "1.2 Nhap danh sach 'HOA DON'\n";
+                cout << "1.3 Hien thi danh sach 'SACH'\n";
+                cout << "1.4 Hien thi danh sach 'HOA DON'\n";
+                cout << "1.5 Luu file danh sach 'SACH'\n";
+                cout << "1.6 Luu file danh sach 'HOA DON'\n";
+                cout << "0. Tro ve\n";
                 cout << "Nhap lua chon cua ban: ";
-                cin >> sub_choice;
-                switch (sub_choice)
+                cin >> choice1;
+                switch (choice1)
                 {
                 case 1:
-                    cout << "Ban da chon chuc nang A" << endl;
-                    // Viết code để thực hiện chức năng A ở đây
+                    inputBookList(bookList);
                     break;
                 case 2:
-                    cout << "Ban da chon chuc nang B" << endl;
-                    // Viết code để thực hiện chức năng B ở đây
+                    inputInvoiceList(invoiceList);
                     break;
                 case 3:
-                    cout << "Quay lai menu chinh" << endl;
-                    continue_choice1 = false; // set biến flag thành false để kết thúc vòng lặp while
+                    displayBook(bookList);
+                    break;
+                case 4:
+                    displayInvoice(invoiceList);
+                    break;
+                case 5:
+                    // Code cho chuc nang 1.3
+                    break;
+                case 6:
+                    // Code cho chuc nang 1.3
+                    break;
+                case 0:
                     break;
                 default:
-                    cout << "Lua chon khong hop le, vui long chon lai" << endl;
-                    break;
+                    cout << "Lua chon khong hop le. Vui long nhap lai.\n";
                 }
-            }
+            } while (choice1 != 0);
             break;
-            // case 2:
-            //     cout << "Ban da chon lua chon so 2" << endl;
-            //     // Viết code để thực hiện chức năng C ở đây
-            //     break;
-            // case 3:
-            //     cout << "Ban da chon lua chon so 3" << endl;
-            //     // Viết code để thực hiện chức năng D ở đây
-            //     break;
-            // case 4:
-            //     cout << "Ban da chon lua chon so 4" << endl;
-            //     // Viết code để thực hiện chức năng E ở đây
-            //     break;
-            // case 5:
-            //     cout << "Ban da chon lua chon so 5" << endl;
-            //     // Viết code để thực hiện chức năng F ở đây
-            //     break;
-            // case 6:
-            //     cout << "Ban da chon lua chon so 6" << endl;
-            //     // Viết code để thực hiện chức năng G ở đây
-            //     break;
-            // case 7:
-            //     cout << "Ban da chon lua chon so 7" << endl;
-            //     break;
-            // case 8:
-            //     cout << "Ban da chon lua chon so 8" << endl;
-            //     // Viết code để thực hiện chức năng I ở đây
-            //     break;
-            // default:
-            //     cout << "Lua chon khong hop le" << endl;
-            //     break;
+        case 2:
+            // Code cho chuc nang 2
+            do
+            {
+                cout << "MENU CHUC NANG 2:\n";
+                cout << "2.1 Them SACH  \n";
+                cout << "2.2 Sua SACH theo ten \n";
+                cout << "2.3 Xoa 'SACH' theo ten\n";
+                cout << "2.4 Them 'HOA DON'\n";
+                cout << "2.5 Sua 'HOA DON' theo ten khach hang\n";
+                cout << "2.6 Xoa 'HOA DON' theo ten khach hang\n";
+                cout << "0. Tro ve\n";
+                cout << "Nhap lua chon cua ban: ";
+                cin >> choice2;
+                switch (choice2)
+                {
+                case 1:
+                    addBook(bookList);
+                    break;
+                case 2:
+                    updateBook(bookList);
+                    break;
+                case 3:
+                    removeBook(bookList);
+                    break;
+                case 4:
+                    addInvoice(invoiceList);
+                    break;
+                case 5:
+                    updateInvoice(invoiceList);
+                    break;
+                case 6:
+                    removeInvoice(invoiceList);
+                    break;
+                case 0:
+                    break;
+                default:
+                    cout << "Lua chon khong hop le. Vui long nhap lai.\n";
+                }
+            } while (choice2 != 0);
+            break;
+        case 3:
+            do
+            {
+                cout << "MENU CHUC NANG 3:\n";
+                cout << "3.1 Tim kiem 'SACH' theo ten  \n";
+                cout << "3.2 Tim kiem 'HOA DON' theo ten khach hang \n";
+                cout << "0. Tro ve\n";
+                cout << "Nhap lua chon cua ban: ";
+                cin >> choice3;
+                switch (choice3)
+                {
+                case 1:
+                    searchByName(bookList);
+                    break;
+                case 2:
+                    searchInvoiceByName(invoiceList);
+                    break;
+                case 0:
+                    break;
+                default:
+                    cout << "Lua chon khong hop le. Vui long nhap lai.\n";
+                }
+            } while (choice3 != 0);
+            break;
+        case 4:
+            do
+            {
+                cout << "MENU CHUC NANG 4:\n";
+                cout << "4.1 Sap xem 'SACH' theo ten ten san pham\n";
+                cout << "4.2 Sap xem 'SACH' theo gia tien\n";
+                cout << "4.3 Sap xep 'HOA DON' theo ten khach hang \n";
+                cout << "4.4 Sap xep 'HOA DON' theo tong tien hoa don\n";
+                cout << "0. Tro ve\n";
+                cout << "Nhap lua chon cua ban: ";
+                cin >> choice4;
+                switch (choice4)
+                {
+                case 1:
+                    sortBookByName(bookList);
+                    break;
+                case 2:
+                    sortBookByPrice(bookList);
+                    break;
+                case 3:
+                    sortListByName(invoiceList);
+                    break;
+                case 4:
+                    sortListByTotalAmount(invoiceList);
+                    break;
+                case 0:
+                    break;
+                default:
+                    cout << "Lua chon khong hop le. Vui long nhap lai.\n";
+                }
+            } while (choice4 != 0);
+            break;
+        case 5:
+            do
+            {
+                cout << "MENU CHUC NANG 5:\n";
+                cout << "5.1 'SACH' co gia cao nhat\n";
+                cout << "5.2 'SACH' co gia thap nhat\n";
+                cout << "5.3 'HOA DON' co don gia cao nhat \n";
+                cout << "5.4 'HOA DON' co don gia cao nhat\n";
+                cout << "0. Tro ve\n";
+                cout << "Nhap lua chon cua ban: ";
+                cin >> choice5;
+                switch (choice5)
+                {
+                case 1:
+                    findMaxByPrice(bookList);
+                    break;
+                case 2:
+                    findMinByPrice(bookList);
+                    break;
+                case 3:
+                    findMaxByTotalAmount(invoiceList);
+                    break;
+                case 4:
+                    findMinTotalAmount(invoiceList);
+                    break;
+                case 0:
+                    break;
+                default:
+                    cout << "Lua chon khong hop le. Vui long nhap lai.\n";
+                }
+            } while (choice5 != 0);
+            break;
+        case 6:
+            do
+            {
+                cout << "MENU CHUC NANG 6:\n";
+                cout << "6.1 Tong tien mat hang 'SACH'\n";
+                cout << "6.2 Tong tien trung binh mat hang 'SACH'\n";
+                cout << "6.3 So luong 'SACH' co trong he thong\n";
+                cout << "6.4 Tong tien 'HOA DON'\n";
+                cout << "6.5 Tong tien trung binh 'HOA DON'\n";
+                cout << "6.6 So luong 'HOA DON' \n";
+                cout << "0. Tro ve\n";
+                cout << "Nhap lua chon cua ban: ";
+                cin >> choice6;
+                switch (choice6)
+                {
+                case 1:
+                    sum(bookList);
+                    break;
+                case 2:
+                    average(bookList);
+                    break;
+                case 3:
+                    count(bookList);
+                    break;
+                case 4:
+                    getTotal(invoiceList);
+                    break;
+                case 5:
+                    getAverage(invoiceList);
+                    break;
+                case 6:
+                    getCount(invoiceList);
+                    break;
+                case 0:
+                    break;
+                default:
+                    cout << "Lua chon khong hop le. Vui long nhap lai.\n";
+                }
+            } while (choice6 != 0);
+            break;
+        case 7:
+            do
+            {
+                cout << "MENU CHUC NANG 7:\n";
+                cout << "7.1 Tong tien mat hang 'SACH' co size nho hon 12\n";
+                cout << "7.2 Tong tien mat hang 'SACH' co gia lon hon 10.000 VND\n";
+                cout << "7.3 Nhung 'HOA DON' có tong gia lớn hơn 50.000\n";
+                cout << "7.4 Thong ke khach hang mua bao nhieu 'HOA DON'\n";
+                cout << "0. Tro ve\n";
+                cout << "Nhap lua chon cua ban: ";
+                cin >> choice7;
+                switch (choice7)
+                {
+                case 1:
+                    sumByType(bookList);
+                    break;
+                case 2:
+                    countByPrice(bookList);
+                    break;
+                case 3:
+                    findLargeInvoices(invoiceList);
+                    break;
+                case 4:
+                    countProductByCustomerName(invoiceList);
+                    break;
+                case 0:
+                    break;
+                default:
+                    cout << "Lua chon khong hop le. Vui long nhap lai.\n";
+                }
+            } while (choice7 != 0);
+            break;
+        case 0:
+            break;
+        default:
+            cout << "Lua chon khong hop le. Vui long nhap lai.\n";
         }
-    }
-
-    // chuc năng
-    //    inputClothingList(clothingList);
-    //    inputInvoiceList(invoiceList);
-    //    displayClothing(clothingList);
-    //    displayInvoice(invoiceList);
+    } while (choice != 0);
 
     return 0;
 }
