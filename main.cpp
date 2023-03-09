@@ -47,6 +47,7 @@ struct DLIST
  * @brief Add Book
  *
  */
+// Thêm sách 
 void addBook(LIST &lst, Book book)
 {
     Node *p = new Node;
@@ -83,6 +84,7 @@ void addBook(LIST lst)
  * @return true
  * @return false
  */
+// Cập nhật sách 
 bool updateBook(LIST &lst)
 {
     Book newBook;
@@ -116,6 +118,7 @@ bool updateBook(LIST &lst)
  * @return true
  * @return false
  */
+// Xoá sách
 bool removeBook(LIST &lst)
 {
     string name;
@@ -163,6 +166,7 @@ bool removeBook(LIST &lst)
  * @param list
  * @param name
  */
+// Tìm kiếm sách theo tên 
 void searchByName(LIST &list)
 {
     string name;
@@ -191,6 +195,7 @@ void searchByName(LIST &list)
  * @param list
  * @param price
  */
+// Tìm kiếm theo giá của sách
 void searchByPrice(LIST &list)
 {
     int price;
@@ -218,6 +223,7 @@ void searchByPrice(LIST &list)
  *
  * @param lst
  */
+// Tìm sách theo tên cuốn sách 
 void sortBookByName(LIST &lst)
 {
     Node *i, *j, *prev_j;
@@ -267,6 +273,7 @@ void sortBookByName(LIST &lst)
  *
  * @param lst
  */
+// Tìm sách theo giá sách 
 void sortBookByPrice(LIST &lst)
 {
     Node *i, *j, *prev_j;
@@ -317,6 +324,7 @@ void sortBookByPrice(LIST &lst)
  *
  * @param list
  */
+// Lọc danh sách theo tên của sách 
 void sortListByName(DLIST &list)
 {
     if (list.head == nullptr || list.head == list.tail)
@@ -374,6 +382,7 @@ void sortListByName(DLIST &list)
  *
  * @param list
  */
+// Lọc danh sách theo tổng số 
 void sortListByTotalAmount(DLIST &list)
 {
     if (list.head == nullptr || list.head == list.tail)
@@ -551,7 +560,7 @@ void countByPrice(LIST list)
     }
     cout << "So luong 'BOOK' co gia lon hon  " << priceLimit << " = " << count << " chiec.";
 }
-
+//Đưa ra danh sách các sách
 void displayBook(LIST lst)
 {
     cout << "List of book: " << endl;
@@ -562,7 +571,7 @@ void displayBook(LIST lst)
         p = p->next;
     }
 }
-
+//Đưa ra đầu vào của sách 
 void inputBookList(LIST &lst)
 {
     int n;
@@ -581,7 +590,7 @@ void inputBookList(LIST &lst)
         addBook(lst, book);
     }
 }
-
+// Nhập thông tin khách hàng
 void addInvoice(DLIST &dlst, Invoice inv)
 {
     DNode *p = new DNode;
@@ -611,13 +620,13 @@ void addInvoice(DLIST &dlst)
     cin >> inv.totalAmount;
     addInvoice(dlst, inv);
 }
-
+//Đưa ra thông tin khách hàng 
 void displayInvoice(Invoice p)
 {
     cout << "Customer name: " << p.customerName << ", Total amount: " << p.totalAmount << ", Quantity: "
          << p.totalAmount << endl;
 }
-
+// Cập nhật thông tin khách hàng 
 bool updateInvoice(DLIST &lst)
 {
     string customerName;
@@ -646,7 +655,7 @@ bool updateInvoice(DLIST &lst)
     }
     return false;
 }
-
+//Xoá thông tin khách hàng 
 bool removeInvoice(DLIST &lst)
 {
     string customerName;
@@ -684,7 +693,7 @@ bool removeInvoice(DLIST &lst)
     }
     return false;
 }
-
+//Tìm kiếm thông tin khách hàng 
 void *searchInvoiceByName(DLIST DQ)
 {
     string customerName;
@@ -703,7 +712,7 @@ void *searchInvoiceByName(DLIST DQ)
         p = p->next;
     }
 }
-
+// Tìm giá trị tổng số lượng lớn nhất 
 void findMaxByTotalAmount(DLIST list)
 {
     // Trường hợp danh sách rỗng
@@ -726,7 +735,7 @@ void findMaxByTotalAmount(DLIST list)
         displayInvoice(maxInvoice);
     }
 }
-
+// Tìm giá trị tổng số lượng nhỏ nhất 
 Invoice findMinTotalAmount(DLIST list)
 {
     if (list.head == nullptr)
@@ -748,7 +757,7 @@ Invoice findMinTotalAmount(DLIST list)
         displayInvoice(minInvoice);
     }
 }
-
+//Tính tổng 
 void getTotal(DLIST list)
 {
     if (list.head == nullptr)
@@ -767,7 +776,7 @@ void getTotal(DLIST list)
         cout << "Tong tien 'HOA DON' : " << total << " VND";
     }
 }
-
+//Tính trung bình 
 void getAverage(DLIST list)
 {
     // Trường hợp danh sách rỗng
@@ -791,7 +800,7 @@ void getAverage(DLIST list)
         cout << "Tong tien trung binh 'HOA DON'" << (float)total / count << " VND";
     }
 }
-
+// Đếm số lượng 
 int getCount(DLIST list)
 {
     if (list.head == nullptr)
@@ -811,7 +820,7 @@ int getCount(DLIST list)
         cout << "So luong 'HOA DON' : " << count;
     }
 }
-
+// Tìm các hoá đơn có giá trị hơn 50000
 void findLargeInvoices(DLIST list)
 {
     DNode *p = list.head;
@@ -831,6 +840,7 @@ void findLargeInvoices(DLIST list)
         cout << "Khong co hoa don nao co gia tri lon hon 50000." << endl;
     }
 }
+//Đếm số lượng sản phẩm bởi khách hàng 
 void countProductByCustomerName(DLIST list)
 {
     string customerName;
@@ -849,7 +859,7 @@ void countProductByCustomerName(DLIST list)
     }
     cout << "Khach hang " << customerName << "da mua " << count << " san pham.";
 }
-
+// Đưa ra hoá đơn 
 void displayInvoice(DLIST dlst)
 {
     cout << "List of invoices: " << endl;
@@ -861,7 +871,7 @@ void displayInvoice(DLIST dlst)
         p = p->next;
     }
 }
-
+//Nhập vào thông tin khách hàng
 void inputInvoiceList(DLIST &lst)
 {
     int n;
@@ -880,7 +890,7 @@ void inputInvoiceList(DLIST &lst)
         addInvoice(lst, inv);
     }
 }
-
+// Chương trình chính 
 int main()
 {
     LIST bookList;
@@ -934,10 +944,10 @@ int main()
                     displayInvoice(invoiceList);
                     break;
                 case 5:
-                    // Code cho chuc nang 1.3
+                    // Code cho chuc nang 1.5
                     break;
                 case 6:
-                    // Code cho chuc nang 1.3
+                    // Code cho chuc nang 1.6
                     break;
                 case 0:
                     break;
