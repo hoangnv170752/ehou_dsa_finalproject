@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <fstream>
 
 using namespace std;
 
@@ -890,6 +891,28 @@ void inputInvoiceList(DLIST &lst)
         addInvoice(lst, inv);
     }
 }
+//Lưu file hoá đơn ra máy 
+void saveCustomerToFile(DLIST& InvoiceList) {
+    string filePath;
+    cout << "Nhập vào đường dẫn file để lưu thông tin người dùng: ";
+    cin >> filePath;
+    ofstream outputFile;
+    outputFile.open(filePath);
+    if (!outputFile) {
+        cerr << "Lỗi không tạo được file " << filePath << endl;
+        return;
+    }
+    DNode* current = InvoiceList.head;
+    while (current != NULL) {
+        outputFile << "Tên khách hàng: " << current->info.customerName << endl;
+        outputFile << "Số lượng: " << current->info.quantity << endl;
+        outputFile << "Tổng số hoá đơn : " << current->info.totalAmount << endl;
+        outputFile << endl;
+        current = current->next;
+    }
+    outputFile.close();
+    cout << "Dữ liệu khách hàng đã được lưu vào file : " << filePath << endl;
+}
 // Chương trình chính 
 int main()
 {
@@ -903,6 +926,7 @@ int main()
     int choice, choice1, choice2, choice3, choice4, choice5, choice6, choice7;
     do
     {
+        cout << "| ********************* | \n";
         cout << "Menu:\n";
         cout << "1. Nhap-In danh sach 'Sach' - 'Hoa don khach hang' .\n";
         cout << "2. Thêm -  sửa - xóa hàng hóa.\n";
@@ -919,16 +943,18 @@ int main()
         case 1:
             do
             {
+                cout << "| ********************* | \n";
                 cout << "MENU CHUC NANG 1:\n";
                 cout << "1.1 Nhap danh sach 'SACH'\n";
                 cout << "1.2 Nhap danh sach 'HOA DON'\n";
                 cout << "1.3 Hien thi danh sach 'SACH'\n";
                 cout << "1.4 Hien thi danh sach 'HOA DON'\n";
-                cout << "1.5 Luu file danh sach 'SACH'\n";
-                cout << "1.6 Luu file danh sach 'HOA DON'\n";
+                cout << "1.5 Luu file danh sach 'HOA DON'\n";
                 cout << "0. Tro ve\n";
                 cout << "Nhap lua chon cua ban: ";
                 cin >> choice1;
+                cout << "\n";
+                cout << "| ********************* | \n";
                 switch (choice1)
                 {
                 case 1:
@@ -944,10 +970,7 @@ int main()
                     displayInvoice(invoiceList);
                     break;
                 case 5:
-                    // Code cho chuc nang 1.5
-                    break;
-                case 6:
-                    // Code cho chuc nang 1.6
+                    saveCustomerToFile(invoiceList);
                     break;
                 case 0:
                     break;
@@ -960,6 +983,7 @@ int main()
             // Code cho chuc nang 2
             do
             {
+                cout << "| ********************* | \n";
                 cout << "MENU CHUC NANG 2:\n";
                 cout << "2.1 Them SACH  \n";
                 cout << "2.2 Sua SACH theo ten \n";
@@ -970,7 +994,7 @@ int main()
                 cout << "0. Tro ve\n";
                 cout << "Nhap lua chon cua ban: ";
                 cin >> choice2;
-                switch (choice2)
+            switch (choice2)
                 {
                 case 1:
                     addBook(bookList);
@@ -1000,6 +1024,7 @@ int main()
         case 3:
             do
             {
+                cout << "| ********************* | \n";
                 cout << "MENU CHUC NANG 3:\n";
                 cout << "3.1 Tim kiem 'SACH' theo ten  \n";
                 cout << "3.2 Tim kiem 'HOA DON' theo ten khach hang \n";
@@ -1024,6 +1049,7 @@ int main()
         case 4:
             do
             {
+                cout << "| ********************* | \n";
                 cout << "MENU CHUC NANG 4:\n";
                 cout << "4.1 Sap xem 'SACH' theo ten ten san pham\n";
                 cout << "4.2 Sap xem 'SACH' theo gia tien\n";
@@ -1056,6 +1082,7 @@ int main()
         case 5:
             do
             {
+                cout << "| ********************* | \n";
                 cout << "MENU CHUC NANG 5:\n";
                 cout << "5.1 'SACH' co gia cao nhat\n";
                 cout << "5.2 'SACH' co gia thap nhat\n";
@@ -1088,6 +1115,7 @@ int main()
         case 6:
             do
             {
+                cout << "| ********************* | \n";
                 cout << "MENU CHUC NANG 6:\n";
                 cout << "6.1 Tong tien mat hang 'SACH'\n";
                 cout << "6.2 Tong tien trung binh mat hang 'SACH'\n";
@@ -1128,6 +1156,7 @@ int main()
         case 7:
             do
             {
+                cout << "| ********************* | \n";
                 cout << "MENU CHUC NANG 7:\n";
                 cout << "7.1 Tong tien mat hang 'SACH' co size nho hon 12\n";
                 cout << "7.2 Tong tien mat hang 'SACH' co gia lon hon 10.000 VND\n";
